@@ -447,7 +447,7 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     </comp>
     <comp lib="0" loc="(820,520)" name="Constant">
       <a name="width" val="8"/>
-      <a name="value" val="0x78"/>
+      <a name="value" val="0x0"/>
     </comp>
     <comp loc="(400,120)" name="bus control"/>
     <comp lib="1" loc="(580,450)" name="AND Gate">

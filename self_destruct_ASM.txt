@@ -1,0 +1,61 @@
+********************************************************************************
+* This program is written for the CPU modified by Richard Rininger, Brian      *
+* Yergeau, and Zach Farrer.                                                    *
+*                                                                              *
+* Modifications include fixing the store operation, allowing reset to be used  *
+* in any phase, adding a switch for conditional move (switch between comparing *
+* to zero and comparing to 1), and adding I/O via a keyboard and TTY.          *
+*                                                                              *
+* This program demonstrates the I/O and store operations by displaying on the  *
+* TTY what is typed into the keyboard before the program is started. Then the  *
+* array summing program is run. Finally, the program erases itself using the   *
+* store (e) command.                                                           *
+********************************************************************************
+
+
+ASSEMBLY
+--------
+00	MOV		R1, FF	; MOVE 'FF' INTO R1
+01	LOAD	R1		; PUT 'FF' ON ADDRESS BUS, LOAD KEYBOARD INPUT CHAR INTO R1
+02	STOR	R1, FF	; STORE VAL OF R1 AT ADDR FF (FOR TTY TO CYCLE, FF MUST GO ON ADDR BUS AGAIN)
+03	JZN		R1, 00	; IF R1 != 0, GOTO 00 (IF R1 !=0, MORE DATA IN KEYBOARD)
+
+04	JZN  R5, 14			; If value in sum (R5) do NOT run program again (goto line 20)
+05	MOV  R1, 01			; Move value 1 into R1
+06	MOV  R2, 60			; Move array size address 0x60 to R2
+07	AND  R3, R0, R1		; Initialize R3 to 0
+08	ADD  R3, R2, R0		; Add R0 to array size address (R2), Results in R3
+09	LOAD R2				; Dereference R2 to get array size
+10	ADD  R3, R2, R3		; Add array size (R2) to array size address(R3), Results in R3
+11	AND  R4, R0, R1		; Initialize R4 to 00
+12	AND  R5, R0, R1		; Initialize sum (R5) to 00
+13	ADD  R4, R3, R0		; Store current array address(R3 + 0) in R4
+14	LOAD R4				; Dereference R4 to get value array[address_max]
+15	ADD  R5, R5, R4		; Sum = sum + array[address_max]
+16	SUB  R3, R3, R1		; Subtract 1 from R3 (get address_max -1)
+17	SUB  R2, R2, R1		; Subtract 1 from index (R2)
+18	JZN  R2, 0D			; If(index != 0) goto line 13
+19	MOV  R6, FF			; Signify end by putting 'FF' in R6
+
+MACHINE CODE
+------------
+00	71FF
+01	D100
+02	E1FF
+03	9100
+04	9514
+05	7101	
+06	7260	
+07	4301	
+08	0320	
+09	D200	
+10	0323	
+11	4401	
+12	4501	
+13	0430	
+14	D400	
+15	0554	
+16	1331	
+17	1221
+18	920D
+19	76FF
